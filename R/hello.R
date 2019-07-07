@@ -52,6 +52,4 @@ makemcsim <- function(model, deSolve = F, dir = "modeling"){
   }
 }
 
-system("./mod.dll")
-
 
