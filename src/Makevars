@@ -1,0 +1,11 @@
+CC = gcc
+SOURCES_C = $(wildcard mod/*.c)
+TARGET = mod.exe
+
+all: $(TARGET)
+
+$(TARGET): $(SOURCES_C)
+	$(CC) -o $(TARGET) $(SOURCES_C)
+
+
+
