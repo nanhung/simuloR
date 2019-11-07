@@ -51,7 +51,7 @@ makemcsim <- function(file, deSolve = F, dir = "modeling"){
     system(paste("gcc -O3 -I.. -I.", simwd, " -o mcsim.", mName, " ", mName, ".c ", simwd, "/*.c -lm ", sep = ""))
 
     invisible(file.remove(paste0(mName, ".c")))
-    if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "' at ", current.wd, "."))
+    if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "' at ", current.wd, ".")) # current.wd to file.wd
     setwd(current.wd)
   }
 }
