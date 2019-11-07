@@ -54,4 +54,7 @@ makemcsim <- function(model, deSolve = F, dir = "modeling"){
   }
 }
 
+mods <- function(){
+  system.file('models', package = 'simuloR')
+}
 
