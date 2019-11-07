@@ -22,6 +22,7 @@ makemcsim <- function(model, deSolve = F, dir = "modeling"){
   pkgwd <- find.package("simuloR")
 
   exe_file <- paste0("mcsim.", model)
+  #if(file.exists(exe_file)) stop(paste0("* '", exe_file, "' had been created."))
 
   if (deSolve == T){
     system(paste("./MCSim/mod.exe -R ", dir, "/", model, " ", model, ".c", sep = ""))
@@ -45,11 +46,12 @@ makemcsim <- function(model, deSolve = F, dir = "modeling"){
 
     simwd <- system.file('sim', package = 'simuloR')
 
-    model
+    message(paste0("* Creating executable program, pleas wait..."))
     system(paste("gcc -O3 -I.. -I.", simwd, " -o mcsim.", model, " ", model, ".c ", simwd, "/*.c -lm ", sep = ""))
 
-    message(paste0("* Creating executable program, pleas wait..."))
     invisible(file.remove(paste0(model, ".c")))
     if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
   }
 }
+
+
