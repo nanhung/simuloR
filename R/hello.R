@@ -17,18 +17,20 @@ hello <- function() {
   print("Hello, world!")
 }
 
-makemcsim <- function(model, deSolve = F, dir = "modeling"){
+makemcsim <- function(file, deSolve = F, dir = "modeling"){
 
   pkgwd <- find.package("simuloR")
 
-  exe_file <- paste0("mcsim.", model)
+  mStr <- strsplit(file, "/")
+  mName <- mStr[[1]][length(mStr[[1]])]
+  exe_file <- paste0("mcsim.", mName)
   #if(file.exists(exe_file)) stop(paste0("* '", exe_file, "' had been created."))
 
   if (deSolve == T){
-    system(paste("./MCSim/mod.exe -R ", dir, "/", model, " ", model, ".c", sep = ""))
-    system (paste0("R CMD SHLIB ", model, ".c")) # create *.dll files
-    dyn.load(paste(model, .Platform$dynlib.ext, sep="")) # load *.dll
-    source(paste0(model,"_inits.R"))
+    system(paste("./MCSim/mod.exe -R ", dir, "/", mName, " ", mName, ".c", sep = ""))
+    system (paste0("R CMD SHLIB ", mName, ".c")) # create *.dll files
+    dyn.load(paste(mName, .Platform$dynlib.ext, sep="")) # load *.dll
+    source(paste0(mName,"_inits.R"))
   } else {
 
     if(.Platform$OS.type == "windows"){
@@ -41,16 +43,16 @@ makemcsim <- function(model, deSolve = F, dir = "modeling"){
 
     current.wd <- getwd()
     setwd(mod.wd)
-    system(paste0("./", mod," ", current.wd, "/", model, " ", current.wd, "/", model, ".c"))
-    setwd(current.wd)
+    system(paste0("./", mod," ", file, " ", mName, ".c"))
 
     simwd <- system.file('sim', package = 'simuloR')
 
     message(paste0("* Creating executable program, pleas wait..."))
-    system(paste("gcc -O3 -I.. -I.", simwd, " -o mcsim.", model, " ", model, ".c ", simwd, "/*.c -lm ", sep = ""))
+    system(paste("gcc -O3 -I.. -I.", simwd, " -o mcsim.", mName, " ", mName, ".c ", simwd, "/*.c -lm ", sep = ""))
 
-    invisible(file.remove(paste0(model, ".c")))
-    if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
+    invisible(file.remove(paste0(mName, ".c")))
+    if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "' at ", current.wd, "."))
+    setwd(current.wd)
   }
 }
 
