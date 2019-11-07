@@ -4,6 +4,6 @@ mod_TARGET = mod.so
 
 all: $(mod_TARGET)
 
-$(mod_TARGET): $(SOURCES_C)
+$(mod_TARGET): $(mod_SOURCES_C)
 	$(CC) -o $(mod_TARGET) $(mod_SOURCES_C)
 
