@@ -1,11 +1,9 @@
 CC = gcc
-SOURCES_C = $(wildcard mod/*.c)
-TARGET = mod.so
+mod_SOURCES_C = $(wildcard mod/*.c)
+mod_TARGET = mod.so
 
-all: $(TARGET)
+all: $(mod_TARGET)
 
-$(TARGET): $(SOURCES_C)
-	$(CC) -o $(TARGET) $(SOURCES_C)
-
-
+$(mod_TARGET): $(SOURCES_C)
+	$(CC) -o $(mod_TARGET) $(mod_SOURCES_C)
 
