@@ -44,11 +44,11 @@ makemcsim <- function(model, deSolve = F, dir = "modeling"){
     system(paste0("./", mod," ", current.wd, "/", model, " ", current.wd, "/", model, ".c"))
     setwd(current.wd)
 
-    #system(paste("./MCSim/mod.exe ", model, " ", model, ".c", sep = ""))
+    simwd <- system.file('sim', package = 'simuloR')
 
-    #system(paste("gcc -O3 -I.. -I./MCSim/sim -o mcsim.", model, model, ".c ./MCSim/sim/*.c -lm ", sep = ""))
-    #invisible(file.remove(paste0(model, ".c")))
-    #if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
+    system(paste("gcc -O3 -I.. -I.", simwd, " -o mcsim.", model, " ", model, ".c ", simwd, "/*.c -lm ", sep = ""))
+    invisible(file.remove(paste0(model, ".c")))
+    if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
   }
 }
 
