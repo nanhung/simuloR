@@ -40,6 +40,7 @@ makemcsim <- function(file){
   system(paste0("R CMD SHLIB ", dir.file, "/", mName, ".c "))
   dyn.load(paste(dir.file, "/", mName, .Platform$dynlib.ext, sep=""))
   source(paste0(dir.file, "/", mName, "_inits.R"))
+  invisible(file.remove(paste0(dir.file, "/", mName, "_inits.R")))
 
   initStates <- initStates()
   initParms <- initParms()
@@ -53,8 +54,7 @@ makemcsim <- function(file){
   file.o <- paste0(dir.file, "/", mName, ".o")
   invisible(file.remove(c(paste0(getwd(), "/",mod),
                           paste0(dir.file, "/", mName, ".c"),
-                          paste0(dir.file, "/", mName, .Platform$dynlib.ext),
-                          paste0(dir.file, "/", mName, "_inits.R"))))
+                          paste0(dir.file, "/", mName, .Platform$dynlib.ext))))
   if (file.exists(file.o)) invisible(file.remove(file.o))
 
   x <- list(initStates = initStates, initParms = initParms)
