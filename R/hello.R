@@ -17,7 +17,7 @@ hello <- function() {
   print("Hello, world!")
 }
 
-makemcsim <- function(file, deSolve = F, dir = "modeling"){
+makemcsim <- function(file){
 
   dir.pkg <- find.package("simuloR")
   dir.file <- dirname(file)
@@ -41,16 +41,21 @@ makemcsim <- function(file, deSolve = F, dir = "modeling"){
   dyn.load(paste(dir.file, "/", mName, .Platform$dynlib.ext, sep=""))
   source(paste0(dir.file, "/", mName, "_inits.R"))
 
+  initStates <- initStates()
+  initParms <- initParms()
+
   system(paste0("./", mod," ", file, " ", dir.file, "/",mName, ".c"))
   message(paste0("* Creating executable program, pleas wait..."))
   system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
+  if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
 
   invisible(file.remove(paste0(getwd(), "/",mod)))
   invisible(file.remove(paste0(dir.file, "/", mName, ".c")))
   invisible(file.remove(paste(dir.file, "/", mName, .Platform$dynlib.ext, sep="")))
   invisible(file.remove(paste0(dir.file, "/", mName, "_inits.R")))
 
-  if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
+  x <- list(initStates = initStates, initParms = initParms)
+  return(x)
 }
 
 mods <- function(){
