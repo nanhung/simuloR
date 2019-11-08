@@ -49,10 +49,13 @@ makemcsim <- function(file){
   system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
   if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
 
-  invisible(file.remove(paste0(getwd(), "/",mod)))
-  invisible(file.remove(paste0(dir.file, "/", mName, ".c")))
-  invisible(file.remove(paste(dir.file, "/", mName, .Platform$dynlib.ext, sep="")))
-  invisible(file.remove(paste0(dir.file, "/", mName, "_inits.R")))
+
+  file.o <- paste0(dir.file, "/", mName, ".o")
+  invisible(file.remove(c(paste0(getwd(), "/",mod),
+                          paste0(dir.file, "/", mName, ".c"),
+                          paste0(dir.file, "/", mName, .Platform$dynlib.ext),
+                          paste0(dir.file, "/", mName, "_inits.R"))))
+  if (file.exists(file.o)) invisible(file.remove(file.o))
 
   x <- list(initStates = initStates, initParms = initParms)
   return(x)
