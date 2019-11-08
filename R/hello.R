@@ -19,11 +19,14 @@ hello <- function() {
 
 makemcsim <- function(file, deSolve = F, dir = "modeling"){
 
-  pkgwd <- find.package("simuloR")
+  current.wd <- getwd()
+  dir.pkg <- find.package("simuloR")
+  dir.file <- dirname(file)
+  dir.sim <- system.file('sim', package = 'simuloR')
 
   mStr <- strsplit(file, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
-  exe_file <- paste0("mcsim.", mName)
+  exe_file <- paste0(dir.file, "/mcsim.", mName)
   #if(file.exists(exe_file)) stop(paste0("* '", exe_file, "' had been created."))
 
   if (deSolve == T){
@@ -35,24 +38,20 @@ makemcsim <- function(file, deSolve = F, dir = "modeling"){
 
     if(.Platform$OS.type == "windows"){
       mod <- "mod.dll"
-      mod.wd <- paste0(pkgwd, "/libs/x64")
+      dir.mod <- paste0(dir.pkg, "/libs/x64")
     } else {
       mod <- "mod.so"
-      mod.wd <- paste0(pkgwd, "/libs")
+      dir.mod <- paste0(dir.pkg, "/libs")
     }
 
-    current.wd <- getwd()
-    setwd(mod.wd)
-    system(paste0("./", mod," ", file, " ", mName, ".c"))
-
-    simwd <- system.file('sim', package = 'simuloR')
+    invisible(file.copy(from = paste0(dir.mod, "/",mod), to = paste0(getwd(), "/",mod)))
+    system(paste0("./", mod," ", file, " ", dir.file, "/",mName, ".c"))
+    invisible(file.remove(paste0(getwd(), "/",mod)))
 
     message(paste0("* Creating executable program, pleas wait..."))
-    system(paste("gcc -O3 -I.. -I.", simwd, " -o mcsim.", mName, " ", mName, ".c ", simwd, "/*.c -lm ", sep = ""))
-
-    invisible(file.remove(paste0(mName, ".c")))
-    if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "' at ", current.wd, ".")) # current.wd to file.wd
-    setwd(current.wd)
+    system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
+    invisible(file.remove(paste0(dir.file, "/", mName, ".c")))
+    if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
   }
 }
 
