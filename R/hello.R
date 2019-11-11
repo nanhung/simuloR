@@ -17,7 +17,7 @@ hello <- function() {
   print("Hello, world!")
 }
 
-makemcsim <- function(file){
+makemcsim <- function(file, init = F){
 
   dir.pkg <- find.package("simuloR")
   dir.file <- dirname(file)
@@ -36,29 +36,32 @@ makemcsim <- function(file){
   }
   invisible(file.copy(from = paste0(dir.mod, "/",mod), to = paste0(getwd(), "/",mod)))
 
-  invisible(system(paste0("./", mod," -R ", file, " ", dir.file, "/",mName, ".c"), intern = T))
-  system(paste0("R CMD SHLIB ", dir.file, "/", mName, ".c "))
-  dyn.load(paste(dir.file, "/", mName, .Platform$dynlib.ext, sep=""))
-  source(paste0(dir.file, "/", mName, "_inits.R"))
-  invisible(file.remove(paste0(dir.file, "/", mName, "_inits.R")))
-
-  initStates <- initStates()
-  initParms <- initParms()
+  if (init == T) {
+    invisible(system(paste0("./", mod," -R ", file, " ", dir.file, "/",mName, ".c"), intern = T))
+    system(paste0("R CMD SHLIB ", dir.file, "/", mName, ".c "))
+    #dyn.file <- paste0(dir.file, "/", mName, .Platform$dynlib.ext)
+    #if (file.exists(dyn.file)) dyn.load(dyn.file)
+    R_file <- paste0(dir.file, "/", mName, "_inits.R")
+    if (file.exists(R_file)) source(R_file)
+    invisible(file.remove(paste0(dir.file, "/", mName, "_inits.R")))
+    initStates <- initStates()
+    initParms <- initParms()
+    x <- list(initStates = initStates, initParms = initParms)
+    invisible(file.remove(c(paste0(dir.file, "/", mName, ".c"),
+                            paste0(dir.file, "/", mName, .Platform$dynlib.ext))))
+  }
 
   system(paste0("./", mod," ", file, " ", dir.file, "/",mName, ".c"))
   message(paste0("* Creating executable program, pleas wait..."))
   system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
   if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
 
-
   file.o <- paste0(dir.file, "/", mName, ".o")
-  invisible(file.remove(c(paste0(getwd(), "/",mod),
-                          paste0(dir.file, "/", mName, ".c"),
-                          paste0(dir.file, "/", mName, .Platform$dynlib.ext))))
   if (file.exists(file.o)) invisible(file.remove(file.o))
+  invisible(file.remove(c(paste0(getwd(), "/",mod),
+                          paste0(dir.file, "/", mName, ".c"))))
 
-  x <- list(initStates = initStates, initParms = initParms)
-  return(x)
+  if (exists("x"))  return(x)
 }
 
 mods <- function(){
