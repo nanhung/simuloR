@@ -1,22 +1,32 @@
-# Hello, world!
-#
-# This is an example function named 'hello'
-# which prints 'Hello, world!'.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Install Package:           'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
-hello <- function() {
-  print("Hello, world!")
-}
-
+#' Compile \pkg{GNU MCSim} model file
+#'
+#' Download the latest or specific version of \pkg{GNU MCSim} from the official website
+#' (\url{https://www.gnu.org/software/mcsim/}) and install it to the system directory.
+#'
+#' This function aims to help users install \pkg{GNU MCSim} more easily.
+#' However, if you can not install it through this function.
+#' The additional way is to follow the instruction and install it manually:
+#' \url{https://www.gnu.org/software/mcsim/mcsim.html#Installation}
+#'
+#' The default \code{mxstp} is setting to 5000.
+#' The user can increase \code{mxstp} to avoid possible error return.
+#' If you meet any error when conduct sensitivity analysis,
+#' you can this function to reinstall \pkg{GNU MCSim} and set the higher \code{mxstp}.
+#' The default installed \code{directory} is under \code{/home/username} (Linux),
+#' \code{/Users/username} (MacOS),
+#' and \code{C:/Users/} (windows). To install \pkg{GNU MCSim} in Windows, be sure to install Rtools first.
+#'
+#' @references
+#' Bois, F. Y., & Maszle, D. R. (1997).
+#' MCSim: a Monte Carlo simulation program.
+#' \emph{Journal of Statistical Software}, 2(9): 1–60.
+#'
+#' @param file a character of version number.
+#' @param init a character to assign the installed directory.
+#'
+#' @rdname makmcsim
+#'
+#' @export
 makemcsim <- function(file, init = F){
 
   dir.pkg <- find.package("simuloR")
@@ -63,8 +73,3 @@ makemcsim <- function(file, init = F){
 
   if (exists("x"))  return(x)
 }
-
-mods <- function(){
-  system.file('models', package = 'simuloR')
-}
-
