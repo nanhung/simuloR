@@ -39,8 +39,8 @@ makemcsim <- function(file, init = F){
   if (init == T) {
     invisible(system(paste0("./", mod," -R ", file, " ", dir.file, "/",mName, ".c"), intern = T))
     system(paste0("R CMD SHLIB ", dir.file, "/", mName, ".c "))
-    #dyn.file <- paste0(dir.file, "/", mName, .Platform$dynlib.ext)
-    #if (file.exists(dyn.file)) dyn.load(dyn.file)
+    dyn.file <- paste0(dir.file, "/", mName, .Platform$dynlib.ext)
+    if (file.exists(dyn.file)) dyn.load(dyn.file)
     R_file <- paste0(dir.file, "/", mName, "_inits.R")
     if (file.exists(R_file)) source(R_file)
     invisible(file.remove(paste0(dir.file, "/", mName, "_inits.R")))
