@@ -31,8 +31,11 @@ makemcsim <- function(file, init = F){
 
   dir.pkg <- find.package("simuloR")
   dir.file <- dirname(file)
-  #dir.sim <- system.file('sim', package = 'simuloR')
-  dir.sim <- paste0(getwd(), "/mcsim-6.1.0/sim")
+
+  dir.sim <- system.file('sim', package = 'simuloR')
+  file.copy(dir.sim, getwd(),
+            overwrite = T, recursive = T, copy.mode = T)
+  dir.sim <- paste0('sim')
 
   mStr <- strsplit(file, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
@@ -71,6 +74,7 @@ makemcsim <- function(file, init = F){
   if (file.exists(file.o)) invisible(file.remove(file.o))
   invisible(file.remove(c(paste0(getwd(), "/",mod),
                           paste0(dir.file, "/", mName, ".c"))))
+  system(paste0("rm -r sim"))
 
   if (exists("x"))  return(x)
 }
