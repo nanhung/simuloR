@@ -35,7 +35,6 @@ makemcsim <- function(file, init = F){
   dir.sim <- system.file('sim', package = 'simuloR')
   file.copy(dir.sim, getwd(),
             overwrite = T, recursive = T, copy.mode = T)
-  dir.sim <- paste0('sim')
 
   mStr <- strsplit(file, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
@@ -67,7 +66,8 @@ makemcsim <- function(file, init = F){
 
   system(paste0("./", mod," ", file, " ", dir.file, "/",mName, ".c"))
   message(paste0("* Creating executable program, pleas wait..."))
-  system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
+  #system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
+  system(paste("gcc -O3 -I.. -I.", "/sim", " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", "./sim", "/*.c -lm ", sep = ""))
   if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
 
   file.o <- paste0(dir.file, "/", mName, ".o")
