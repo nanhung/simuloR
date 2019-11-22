@@ -1,3 +1,4 @@
+#' @export
 mcsim_download <- function() {
 
   version<-"6.1.0"
