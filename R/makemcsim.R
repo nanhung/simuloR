@@ -64,7 +64,6 @@ makemcsim <- function(file, init = F){
 
   system(paste0("./", mod," ", file, " ", dir.file, "/",mName, ".c"))
   message(paste0("* Creating executable program, pleas wait..."))
-  #system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
   system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
   if(file.exists(exe_file)) message(paste0("* Created executable program '", exe_file, "'."))
 
