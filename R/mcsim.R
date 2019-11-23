@@ -86,13 +86,14 @@ mcsim <- function(model, input){
   mName <- mStr[[1]][length(mStr[[1]])]
   makemcsim(model)
 
-  cat("/n")
+  cat("\n")
   message(paste("Executing..."))
   system(paste0("models/mcsim.", mName, " ", input))
-  tryCatch(df <- read.delim("sim.out"), error=function(e) NULL)
-  if (!exists("df"))  df <- read.delim("sim.out", skip = 1)
+  tryCatch(dat <- read.delim("sim.out"), error=function(e) NULL)
+  if(!exists("dat")) dat <- read.delim("sim.out", skip = 1)
 
-  return(df)
+  return(dat)
 }
+
 
 
