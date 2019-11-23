@@ -24,7 +24,7 @@
 #' @param file a character of version number.
 #' @param init a character to assign the installed directory.
 #'
-#' @rdname makmcsim
+#' @rdname mcsim
 #'
 #' @export
 makemcsim <- function(file, init = F){
@@ -78,3 +78,21 @@ makemcsim <- function(file, init = F){
 
   if (exists("x"))  return(x)
 }
+
+#' @export
+mcsim <- function(model, input){
+
+  mStr <- strsplit(model, "/")
+  mName <- mStr[[1]][length(mStr[[1]])]
+  makemcsim(model)
+
+  cat("/n")
+  message(paste("Executing..."))
+  system(paste0("models/mcsim.", mName, " ", input))
+  tryCatch(df <- read.delim("sim.out"), error=function(e) NULL)
+  if (!exists("df"))  df <- read.delim("sim.out", skip = 1)
+
+  return(df)
+}
+
+
