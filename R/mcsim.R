@@ -80,17 +80,85 @@ makemcsim <- function(file, init = F){
 }
 
 #' @export
-mcsim <- function(model, input){
+mcsim <- function(model, input, parallel = F){
 
   mStr <- strsplit(model, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
+
+  tx  <- readLines(input)
+  MCMC_line <- grep("MCMC \\(", x=tx)
+  MonteCarlo_line <- grep("MonteCarlo \\(", x=tx)
+  SetPoints_line <- grep("SetPoints \\(", x=tx)
+
   makemcsim(model)
 
   cat("\n")
   message(paste("Executing..."))
-  system(paste0("models/mcsim.", mName, " ", input))
-  tryCatch(dat <- read.delim("sim.out"), error=function(e) NULL)
-  if(!exists("dat")) dat <- read.delim("sim.out", skip = 1)
+  #system(paste0("models/mcsim.", mName, " ", input)) # need to consider other subfolder name
+
+  if (length(MCMC_line) != 0){
+    #file_defore <- list.files()
+    RandomSeed <- exp(runif(1, min = 0, max = log(2147483646.0)))
+    tx2 <- gsub(pattern = "10101010", replace = paste(RandomSeed), x = tx)
+    checkfile <- "MCMC.check.out"
+
+    if(file.exists(checkfile)){
+      file.remove(checkfile)
+    }
+
+    if (parallel == T){
+      i <- sample(1111:9999, 1)
+      name <- gsub("\\..*", "", input)
+      mcmc_input <- paste0(name, "_", i, ".in")
+      mcmc_output <- paste0(name, "_", i, ".out")
+      tx3 <- gsub(pattern = "MCMC.default.out", replace = mcmc_output, x = tx2)
+      writeLines(tx3, con = mcmc_input)
+      system(paste("./mcsim.", model, mcmc_input, sep = ""))
+
+    } else{
+      tmp <- "tmp.mcmc.in"
+      writeLines(tx2, con=tmp)
+      system(paste0("models/mcsim.", mName, " ", tmp))
+      outfile <- "MCMC.default.out"
+      tx2 <- gsub(pattern = ",0,", replace = ",1,", x = tx)
+      tx3 <- gsub(pattern = paste0("\"", outfile, "\",\"\""),
+                  replace = paste0("\"", checkfile, "\",\"", outfile, "\""),
+                  x = tx2)
+      writeLines(tx3, con=tmp)
+
+      system(paste0("models/mcsim.", mName, " ", tmp))
+      file.remove(tmp)
+    }
+
+    if(file.exists(checkfile)){
+      message(paste0("* Create '", checkfile, "' from the last iteration."))
+    }
+
+    if (parallel == T){
+      dat <- read.delim(mcmc_output)
+    } else {
+      dat <- read.delim("MCMC.default.out")
+    }
+
+  } else if (length(MonteCarlo_line) != 0){
+    tmp <- "tmp.mtc.in"
+    RandomSeed <- runif(1, 0, 2147483646)
+    tx2 <- gsub(pattern = "10101010", replace = paste(RandomSeed), x = tx)
+    writeLines(tx2, con=tmp)
+    system(paste0("models/mcsim.", mName, " ", tmp))
+    dat <- read.delim("simmc.out")
+    file.remove(tmp)
+  } else if (length(SetPoints_line) != 0){
+    system(paste0("models/mcsim.", mName, " ", input))
+    dat <- read.delim("simmc.out")
+  } else {
+    system(paste0("models/mcsim.", mName, " ", tmp))
+    dat <- read.delim("sim.out", skip = 1)
+  }
+
+
+  #tryCatch(dat <- read.delim("sim.out"), error=function(e) NULL)
+  #if(!exists("dat")) dat <- read.delim("sim.out", skip = 1)
 
   cat("________________________________________\n\n")
   return(dat)
