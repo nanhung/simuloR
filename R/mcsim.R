@@ -96,5 +96,18 @@ mcsim <- function(model, input){
   return(dat)
 }
 
+#' @export
+switcheR <- function(){
+  file <- rstudioapi::getSourceEditorContext()[['path']]
+  fStr <- strsplit(file, "/")
+  fName <- fStr[[1]][length(fStr[[1]])]
+  mStr <- strsplit(fName, "\\.")
+
+  extension <- mStr[[1]][length(mStr[[1]])]
+  if(extension == "model" || "in"){
+    new_file <- paste0(file, ".r")
+    file.rename(from = file, to = new_file)
+  }
+}
 
 

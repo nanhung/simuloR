@@ -2,3 +2,4 @@
 
 export(makemcsim)
 export(mcsim)
+export(switcheR)
