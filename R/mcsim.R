@@ -152,7 +152,7 @@ mcsim <- function(model, input, parallel = F){
     system(paste0("models/mcsim.", mName, " ", input))
     dat <- read.delim("simmc.out")
   } else {
-    system(paste0("models/mcsim.", mName, " ", tmp))
+    system(paste0("models/mcsim.", mName, " ", input))
     dat <- read.delim("sim.out", skip = 1)
   }
 
