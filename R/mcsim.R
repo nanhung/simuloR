@@ -172,7 +172,7 @@ switcheR <- function(){
   mStr <- strsplit(fName, "\\.")
 
   extension <- mStr[[1]][length(mStr[[1]])]
-  if(extension == "model" || "in"){
+  if(extension == "model" || extension == "in"){
     new_file <- paste0(file, ".r")
     file.rename(from = file, to = new_file)
   }
