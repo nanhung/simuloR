@@ -160,7 +160,7 @@ mcsim <- function(model, input, parallel = F){
   #tryCatch(dat <- read.delim("sim.out"), error=function(e) NULL)
   #if(!exists("dat")) dat <- read.delim("sim.out", skip = 1)
 
-  cat("________________________________________\n\n")
+  #cat("________________________________________\n\n")
   return(dat)
 }
 
