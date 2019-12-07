@@ -178,4 +178,18 @@ switcheR <- function(){
   }
 }
 
+#' @export
+mcmc_array <- function(data, start_sampling = 0){
+  n_chains <- length(data)
+  sample_number <- dim(data[[1]])[1] - start_sampling
+  dim <- c(sample_number, n_chains, dim(data[[1]])[2])
+  n_iter <- dim(data[[1]])[1]
+  n_param <- dim(data[[1]])[2]
+  x <- array(sample_number:(n_iter * n_chains * n_param), dim = dim)
+  for (i in 1:n_chains) {
+    x[, i, ] <- as.matrix(data[[i]][(start_sampling + 1):n_iter, ])
+  }
+  dimnames(x)[[3]] <- names(data[[1]])
+  x
+}
 
