@@ -27,16 +27,16 @@
 #' @rdname mcsim
 #'
 #' @export
-makemcsim <- function(file, init = F){
+makemcsim <- function(model, init = F){
 
   dir.pkg <- find.package("simuloR")
-  dir.file <- dirname(file)
+  dir.file <- dirname(model)
 
   dir.sim <- system.file('sim', package = 'simuloR')
   file.copy(dir.sim, getwd(),
             overwrite = T, recursive = T, copy.mode = T)
 
-  mStr <- strsplit(file, "/")
+  mStr <- strsplit(model, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
   exe_file <- paste0(dir.file, "/mcsim.", mName)
 
@@ -50,7 +50,7 @@ makemcsim <- function(file, init = F){
   invisible(file.copy(from = paste0(dir.mod, "/",mod), to = paste0(getwd(), "/",mod)))
 
   if (init == T) {
-    invisible(system(paste0("./", mod," -R ", file, " ", dir.file, "/",mName, ".c"), intern = T))
+    invisible(system(paste0("./", mod," -R ", model, " ", dir.file, "/",mName, ".c"), intern = T))
     system(paste0("R CMD SHLIB ", dir.file, "/", mName, ".c "))
     dyn.file <- paste0(dir.file, "/", mName, .Platform$dynlib.ext)
     if (file.exists(dyn.file)) dyn.load(dyn.file)
@@ -64,7 +64,7 @@ makemcsim <- function(file, init = F){
                             paste0(dir.file, "/", mName, .Platform$dynlib.ext))))
   }
 
-  system(paste0("./", mod," ", file, " ", dir.file, "/",mName, ".c"))
+  system(paste0("./", mod," ", model, " ", dir.file, "/",mName, ".c"))
   message(paste0("* Creating executable program, pleas wait..."))
   #system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
   system(paste("gcc -O3 -I.. -I.", "/sim", " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", "./sim", "/*.c -lm ", sep = ""))
@@ -90,7 +90,7 @@ mcsim <- function(model, input, parallel = F){
   MonteCarlo_line <- grep("MonteCarlo \\(", x=tx)
   SetPoints_line <- grep("SetPoints \\(", x=tx)
 
-  makemcsim(model)
+  makemcsim(model = model)
 
   cat("\n")
   message(paste("Executing..."))
