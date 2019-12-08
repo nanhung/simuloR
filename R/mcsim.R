@@ -80,7 +80,7 @@ makemcsim <- function(model, init = F){
 }
 
 #' @export
-mcsim <- function(model, input, parallel = F){
+mcsim <- function(model, input, parallel = F, compile = T){
 
   mStr <- strsplit(model, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
@@ -90,7 +90,7 @@ mcsim <- function(model, input, parallel = F){
   MonteCarlo_line <- grep("MonteCarlo \\(", x=tx)
   SetPoints_line <- grep("SetPoints \\(", x=tx)
 
-  makemcsim(model = model)
+  if (compile == F) makemcsim(model = model)
 
   cat("\n")
   message(paste("Executing..."))
