@@ -93,10 +93,10 @@ mcsim <- function(model, input, parallel = F, compile = T){
   if (compile == F) {
     makemcsim(model = model)
     cat("\n")
-    message(paste("Executing..."))
     #system(paste0("models/mcsim.", mName, " ", input)) # need to consider other subfolder name
   }
 
+  message(paste("Executing..."))
   if (length(MCMC_line) != 0){
     #file_defore <- list.files()
     RandomSeed <- exp(runif(1, min = 0, max = log(2147483646.0)))
