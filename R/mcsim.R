@@ -90,7 +90,7 @@ mcsim <- function(model, input, parallel = F, compile = T){
   MonteCarlo_line <- grep("MonteCarlo \\(", x=tx)
   SetPoints_line <- grep("SetPoints \\(", x=tx)
 
-  if (compile == F) {
+  if (compile == T) {
     makemcsim(model = model)
     cat("\n")
     #system(paste0("models/mcsim.", mName, " ", input)) # need to consider other subfolder name
