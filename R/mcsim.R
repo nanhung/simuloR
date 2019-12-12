@@ -41,7 +41,7 @@ makemcsim <- function(model, init = F){
   exe_file <- paste0(dir.file, "/mcsim.", mName)
 
   if(.Platform$OS.type == "windows"){
-    mod <- "mod.dll"
+    mod <- "mod.exe"
     dir.mod <- paste0(dir.pkg, "/libs/x64")
   } else {
     mod <- "mod.so"
