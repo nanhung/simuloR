@@ -1,6 +1,6 @@
 CC = clang
 SOURCES_C = $(wildcard mod/*.c)
-TARGET = mod.dll
+TARGET = mod.exe
 
 all: $(TARGET)
 
