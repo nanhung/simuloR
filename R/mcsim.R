@@ -73,8 +73,15 @@ makemcsim <- function(model, init = F){
 
   file.o <- paste0(dir.file, "/", mName, ".o")
   if (file.exists(file.o)) invisible(file.remove(file.o))
-  invisible(file.remove(c(paste0(getwd(), "/",mod),
-                          paste0(dir.file, "/", mName, ".c"))))
+
+  if(.Platform$OS.type == "windows"){
+    invisible(file.remove(c(paste0(getwd(), "/mod.exe"),
+                            paste0(dir.file, "/", mName, ".c"))))
+  } else {
+    invisible(file.remove(c(paste0(getwd(), "/",mod),
+                            paste0(dir.file, "/", mName, ".c"))))
+  }
+
   system(paste0("rm -r sim"))
 
   if (exists("x"))  return(x)
