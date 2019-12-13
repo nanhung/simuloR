@@ -96,6 +96,8 @@ mcsim <- function(model, input, parallel = F, compile = T){
   mStr <- strsplit(model, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
 
+  sub.folder <- paste(mStr[[1]][-length(mStr[[1]])],  sep = "/")
+
   tx  <- readLines(input)
   MCMC_line <- grep("MCMC \\(", x=tx)
   MonteCarlo_line <- grep("MonteCarlo \\(", x=tx)
@@ -130,7 +132,7 @@ mcsim <- function(model, input, parallel = F, compile = T){
     } else{
       tmp <- "tmp.mcmc.in"
       writeLines(tx2, con=tmp)
-      system(paste0("models/mcsim.", mName, " ", tmp))
+      system(paste0(sub.folder, "/mcsim.", mName, " ", tmp))
       outfile <- "MCMC.default.out"
       tx2 <- gsub(pattern = ",0,", replace = ",1,", x = tx)
       tx3 <- gsub(pattern = paste0("\"", outfile, "\",\"\""),
@@ -138,7 +140,7 @@ mcsim <- function(model, input, parallel = F, compile = T){
                   x = tx2)
       writeLines(tx3, con=tmp)
 
-      system(paste0("models/mcsim.", mName, " ", tmp))
+      system(paste0(sub.folder, "/mcsim.", mName, " ", tmp))
       file.remove(tmp)
     }
 
@@ -157,14 +159,14 @@ mcsim <- function(model, input, parallel = F, compile = T){
     RandomSeed <- runif(1, 0, 2147483646)
     tx2 <- gsub(pattern = "10101010", replace = paste(RandomSeed), x = tx)
     writeLines(tx2, con=tmp)
-    system(paste0("models/mcsim.", mName, " ", tmp))
+    system(paste0(sub.folder, "/mcsim.", mName, " ", tmp))
     dat <- read.delim("simmc.out")
     file.remove(tmp)
   } else if (length(SetPoints_line) != 0){
-    system(paste0("models/mcsim.", mName, " ", input))
+    system(paste0(sub.folder, "/mcsim.", mName, " ", input))
     dat <- read.delim("simmc.out")
   } else {
-    system(paste0("models/mcsim.", mName, " ", input))
+    system(paste0(sub.folder, "/mcsim.", mName, " ", input))
     dat <- read.delim("sim.out", skip = 1)
   }
 
