@@ -41,13 +41,14 @@ makemcsim <- function(model, init = F){
   exe_file <- paste0(dir.file, "/mcsim.", mName)
 
   if(.Platform$OS.type == "windows"){
-    mod <- "mod.exe"
+    mod <- "mod.dll"
     dir.mod <- paste0(dir.pkg, "/libs/x64")
+    invisible(file.copy(from = paste0(dir.mod, "/",mod), to = paste0(getwd(), "/mod.exe")))
   } else {
     mod <- "mod.so"
     dir.mod <- paste0(dir.pkg, "/libs")
+    invisible(file.copy(from = paste0(dir.mod, "/",mod), to = paste0(getwd(), "/",mod)))
   }
-  invisible(file.copy(from = paste0(dir.mod, "/",mod), to = paste0(getwd(), "/",mod)))
 
   if (init == T) {
     invisible(system(paste0("./", mod," -R ", model, " ", dir.file, "/",mName, ".c"), intern = T))
