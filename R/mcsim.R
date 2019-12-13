@@ -65,7 +65,10 @@ makemcsim <- function(model, init = F){
                             paste0(dir.file, "/", mName, .Platform$dynlib.ext))))
   }
 
-  system(paste0("./", mod," ", model, " ", dir.file, "/",mName, ".c"))
+  if(.Platform$OS.type == "windows"){
+    system(paste0("./mod.exe ", model, " ", dir.file, "/",mName, ".c"))
+  } else system(paste0("./", mod," ", model, " ", dir.file, "/",mName, ".c"))
+
   message(paste0("* Creating executable program, pleas wait..."))
   #system(paste("gcc -O3 -I.. -I.", dir.sim, " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", dir.sim, "/*.c -lm ", sep = ""))
   system(paste("gcc -O3 -I.. -I.", "/sim", " -o ", dir.file, "/mcsim.", mName, " ", dir.file, "/", mName, ".c ", "./sim", "/*.c -lm ", sep = ""))
@@ -82,7 +85,7 @@ makemcsim <- function(model, init = F){
                             paste0(dir.file, "/", mName, ".c"))))
   }
 
-  system(paste0("rm -r sim"))
+  unlink("sim", recursive=TRUE)
 
   if (exists("x"))  return(x)
 }
