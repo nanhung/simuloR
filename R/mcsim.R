@@ -29,6 +29,10 @@
 #' @export
 makemcsim <- function(model, init = F){
 
+  if (file.exist(model)==F){
+   warning(paste("The", model, "not found!"))
+  }
+
   dir.pkg <- find.package("simuloR")
   dir.file <- dirname(model)
 
@@ -92,6 +96,13 @@ makemcsim <- function(model, init = F){
 
 #' @export
 mcsim <- function(model, input, parallel = F, compile = T){
+
+  if (file.exist(model)==F){
+    warning(paste("The", model, "not found!"))
+  }
+  if (file.exist(input)==F){
+    warning(paste("The", input, "not found!"))
+  }
 
   mStr <- strsplit(model, "/")
   mName <- mStr[[1]][length(mStr[[1]])]
