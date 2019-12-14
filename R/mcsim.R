@@ -29,7 +29,7 @@
 #' @export
 makemcsim <- function(model, init = F){
 
-  if (file.exist(model)==F){
+  if (file.exists(model)==F){
    warning(paste("The", model, "not found!"))
   }
 
@@ -97,10 +97,10 @@ makemcsim <- function(model, init = F){
 #' @export
 mcsim <- function(model, input, parallel = F, compile = T){
 
-  if (file.exist(model)==F){
+  if (file.exists(model)==F){
     warning(paste("The", model, "not found!"))
   }
-  if (file.exist(input)==F){
+  if (file.exists(input)==F){
     warning(paste("The", input, "not found!"))
   }
 
