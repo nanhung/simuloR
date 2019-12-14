@@ -130,7 +130,8 @@ mcsim <- function(model, input, parallel = F, compile = T){
       system(paste("./mcsim.", model, mcmc_input, sep = ""))
 
     } else{
-      tmp <- "tmp.mcmc.in"
+      #tmp <- "tmp.mcmc.in"
+      tmp <- tempfile()
       writeLines(tx2, con=tmp)
       system(paste0(sub.folder, "/mcsim.", mName, " ", tmp))
       outfile <- "MCMC.default.out"
@@ -155,7 +156,8 @@ mcsim <- function(model, input, parallel = F, compile = T){
     }
 
   } else if (length(MonteCarlo_line) != 0){
-    tmp <- "tmp.mtc.in"
+    #tmp <- "tmp.mtc.in"
+    tmp <- tempfile()
     RandomSeed <- runif(1, 0, 2147483646)
     tx2 <- gsub(pattern = "10101010", replace = paste(RandomSeed), x = tx)
     writeLines(tx2, con=tmp)
